@@ -27,9 +27,20 @@ class AuthProvider extends ChangeNotifier {
             )));
   }
 
+  void _showMessage(BuildContext context, String message,
+      {bool isSuccess = true}) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: isSuccess ? Colors.green : Colors.red,
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   signup(
       String firstName, lastName, email, password, BuildContext context) async {
     try {
+      loading(context);
       var response =
           await http.post(Uri.parse('${Api.baseUrl}register/'), body: {
         "first_name": firstName,
@@ -48,11 +59,14 @@ class AuthProvider extends ChangeNotifier {
             context,
             MaterialPageRoute(builder: (context) => SignIn()),
             (route) => false);
-
-        // Navigator.pushAndRemoveUntil(Values.navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => VerificationCode(check: false)), (route) => false);
-      } else {}
+        _showMessage(context, 'Sign Up was Successful !', isSuccess: true);
+      } else {
+        _showMessage(context, 'Sign Up was Unsuccessful !', isSuccess: false);
+      }
     } catch (e) {
     } finally {
+      // Hide loading indicator when operation completes
+      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -69,6 +83,7 @@ class AuthProvider extends ChangeNotifier {
 
   signIn(String email, password, BuildContext context) async {
     try {
+      loading(context);
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String? accessToken = prefs.getString('access_token');
@@ -87,15 +102,21 @@ class AuthProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => Home()), (route) => false);
-      } else {}
+        _showMessage(context, 'Login Successful !', isSuccess: true);
+      } else {
+        _showMessage(context, 'Login Failed !', isSuccess: false);
+      }
     } catch (e) {
     } finally {
+      // Hide loading indicator when operation completes
+      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
 
   createProfile(String name, age, password, BuildContext context) async {
     try {
+      loading(context);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('access_token');
       var response = await http.post(
@@ -124,10 +145,16 @@ class AuthProvider extends ChangeNotifier {
         print("profile name: $profileName");
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => Home()), (route) => false);
-      } else {}
+        _showMessage(context, 'Profile was Create Successfully !',
+            isSuccess: true);
+      } else {
+        _showMessage(context, 'Profile Creation Failed !', isSuccess: false);
+      }
     } catch (e) {
       print('Error creating profile: $e');
     } finally {
+      // Hide loading indicator when operation completes
+      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -152,7 +179,6 @@ class AuthProvider extends ChangeNotifier {
         _profilesList = data.map((e) => UserProfileModel.fromJson(e)).toList();
       } else {}
     } catch (error, st) {
-      // Navigator.of(context).pop();
       print('catch error in authprovider getUserProfile $error $st');
     } finally {
       notifyListeners();
@@ -161,6 +187,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> logout(BuildContext context) async {
     try {
+      loading(context);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('access_token'); // Remove the access token
 
@@ -170,9 +197,12 @@ class AuthProvider extends ChangeNotifier {
         MaterialPageRoute(builder: (context) => SignIn()),
         (route) => false,
       );
+      _showMessage(context, 'User Logged Out !', isSuccess: true);
     } catch (e) {
       // Handle any errors if necessary
     } finally {
+      // Hide loading indicator when operation completes
+      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -199,7 +229,10 @@ class AuthProvider extends ChangeNotifier {
             context,
             MaterialPageRoute(builder: (context) => CharacterAnimation()),
             (route) => false);
-      } else {}
+        _showMessage(context, 'Success!', isSuccess: true);
+      } else {
+        _showMessage(context, 'Failed !', isSuccess: false);
+      }
     } catch (e) {
       print('Error creating profile: $e');
     } finally {
