@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -5,6 +7,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'package:confetti/confetti.dart';
+import '../Services/api.dart';
 
 enum TtsState { playing, stopped }
 
@@ -62,7 +65,8 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
 
     // Take the first word
     String firstWord = words.isNotEmpty ? words.first : '';
-    final url = Uri.parse('http://192.168.69.94:5000/process_text');
+    // final url = Uri.parse('http://192.168.69.94:5000/process_text');
+    final url = Uri.parse('${Api.baseUrl}process_text/');
     try {
       final response = await http.post(
         url,
@@ -72,8 +76,18 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
       );
 
       if (response.statusCode == 200) {
-        print('Response: ${response.body}');
-        return response.body;
+        // print('Response: ${response.body}');
+        // return response.body;
+
+        // Decode the JSON response
+        var responseData = json.decode(response.body);
+        
+        // Assuming the response contains a key 'closest_word'
+        String closestWord = responseData['closest_word'];
+
+        print('Closest Word: $closestWord');
+        
+        return closestWord;
         // Handle the response as needed
       } else {
         print('Request failed with status: ${response.statusCode}');

@@ -130,10 +130,10 @@ class _CreateProfileState extends State<CreateProfile> {
                       onPressed: ()  {
 
                         Provider.of<AuthProvider>(context,listen: false).createProfile(nameController.text, ageController.text, passwordController.text, context);
-                        Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CharacterAnimation()));
+                        // Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(
+                        //                 builder: (context) => CharacterAnimation()));
                           
                       },
                       style: ElevatedButton.styleFrom(

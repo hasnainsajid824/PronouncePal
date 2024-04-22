@@ -143,10 +143,10 @@ class _SignInState extends State<SignIn> {
                           Provider.of<AuthProvider>(context, listen: false)
                               .signIn(emailController.text,
                                   passwordController.text, context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Home()));
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => Home()));
                           
                         },
                         style: ElevatedButton.styleFrom(
