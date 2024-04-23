@@ -66,7 +66,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
     } finally {
       // Hide loading indicator when operation completes
-      Navigator.of(context, rootNavigator: true).pop();
+      // Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -95,6 +95,7 @@ class AuthProvider extends ChangeNotifier {
         "email": email,
         "password": password,
       });
+
       print('signin status code ${response.statusCode}');
       print('signin response body ${response.body}');
       var parsedJson = json.decode(response.body);
@@ -109,7 +110,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
     } finally {
       // Hide loading indicator when operation completes
-      Navigator.of(context, rootNavigator: true).pop();
+      // Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -154,7 +155,6 @@ class AuthProvider extends ChangeNotifier {
       print('Error creating profile: $e');
     } finally {
       // Hide loading indicator when operation completes
-      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -201,14 +201,13 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       // Handle any errors if necessary
     } finally {
-      // Hide loading indicator when operation completes
-      Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
 
   loginProfile(String password, BuildContext context) async {
     try {
+      loading(context);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? profileName = prefs.getString('profile_name');
       var response = await http.post(
@@ -223,7 +222,7 @@ class AuthProvider extends ChangeNotifier {
       );
       print('signin status code ${response.statusCode}');
       print('loginprofile response  ${response.body}');
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         var parsedJson = json.decode(response.body);
         Navigator.pushAndRemoveUntil(
             context,
@@ -231,7 +230,7 @@ class AuthProvider extends ChangeNotifier {
             (route) => false);
         _showMessage(context, 'Success!', isSuccess: true);
       } else {
-        _showMessage(context, 'Failed !', isSuccess: false);
+        _showMessage(context, 'Wrong Password !', isSuccess: false);
       }
     } catch (e) {
       print('Error creating profile: $e');

@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:final_year_prpject/Pages/splash_screen.dart';
-import 'package:final_year_prpject/rive_animations/character_animation.dart';
-import 'package:final_year_prpject/rive_animations/state_machine_muscot.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

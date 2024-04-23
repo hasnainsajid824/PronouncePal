@@ -65,28 +65,31 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
 
     // Take the first word
     String firstWord = words.isNotEmpty ? words.first : '';
-    // final url = Uri.parse('http://192.168.69.94:5000/process_text');
+    String sent_word = isTwoWordMode && words.length > 1
+        ? '${words[0]} ${words[1]}'
+        : firstWord;
+    // final url = Uri.parse('http://192.168.0.104:5000/process_text');
     final url = Uri.parse('${Api.baseUrl}process_text/');
     try {
-      final response = await http.post(
-        url,
-        body: isTwoWordMode && words.length > 1
-            ? '${words[0]} ${words[1]}'
-            : firstWord,
-      );
+      final response = await http.post(url,
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
+          body: {'data': sent_word,});
+          // body: sent_word);
 
       if (response.statusCode == 200) {
-        // print('Response: ${response.body}');
+        // print('Response: ${response.body}'); 
         // return response.body;
 
         // Decode the JSON response
         var responseData = json.decode(response.body);
-        
+
         // Assuming the response contains a key 'closest_word'
         String closestWord = responseData['closest_word'];
 
         print('Closest Word: $closestWord');
-        
+
         return closestWord;
         // Handle the response as needed
       } else {
@@ -154,7 +157,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     toggleDance(true);
     await flutterTts.setLanguage('ur-PK');
     await flutterTts.setPitch(1.7);
-    await flutterTts.setSpeechRate(0.30);
+    await flutterTts.setSpeechRate(0.25);
     await flutterTts.setVolume(1.0);
     await flutterTts.awaitSpeakCompletion(true);
     flutterTts.setCompletionHandler(() {
@@ -181,11 +184,11 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
   Widget build(BuildContext context) => Scaffold(
         body: Container(
           decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/back.png'),
-            fit: BoxFit.cover,
+            image: DecorationImage(
+              image: AssetImage('assets/back.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
           child: Stack(
             children: [
               riveArtboard == null
@@ -222,9 +225,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                             }
                           },
                           backgroundColor: Color.fromARGB(255, 87, 175, 247),
-                          child:
-                              Icon(Icons.mic),
-          
+                          child: Icon(Icons.mic),
                         ),
                         const SizedBox(height: 22),
                       ],

@@ -1,5 +1,4 @@
 import 'package:final_year_prpject/Provider/auth_provider.dart';
-import 'package:final_year_prpject/rive_animations/character_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

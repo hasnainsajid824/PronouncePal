@@ -1,4 +1,3 @@
-import 'package:final_year_prpject/Pages/Home_Screen.dart';
 import 'package:final_year_prpject/Pages/signup_screen.dart';
 import 'package:final_year_prpject/Provider/auth_provider.dart';
 import 'package:flutter/material.dart';
