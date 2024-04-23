@@ -15,17 +15,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  //
-  // check()async{
-  //   var response = await Provider.of<AuthProvider>(context,listen: false).checkLoggedIn();
-  //   print('reponse $response');
-  //
-  //   if(response == true){
-  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignIn()));
-  //   }else{
-  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
-  //   }
-  // }
+  
+  check()async{
+    var response = await Provider.of<AuthProvider>(context,listen: false).checkLoggedIn();
+    print('reponse $response');
+  
+    if(response == true){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignIn()));
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

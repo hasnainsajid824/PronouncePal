@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:final_year_prpject/Pages/splash_screen.dart';
+import 'package:final_year_prpject/Pages/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: SplashScreen(),
+      title: 'PronouncePal',
+      home: Splash(),
     );
   }
 }
