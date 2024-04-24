@@ -16,7 +16,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 2),
     );
 
     _animation = CurvedAnimation(
@@ -66,8 +66,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               'PronouncePal',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 36.0,
-                fontWeight: FontWeight.bold,
+                fontSize: 32.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

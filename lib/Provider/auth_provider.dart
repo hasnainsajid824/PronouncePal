@@ -61,6 +61,7 @@ class AuthProvider extends ChangeNotifier {
             (route) => false);
         _showMessage(context, 'Sign Up was Successful !', isSuccess: true);
       } else {
+        Navigator.of(context, rootNavigator: true).pop();
         _showMessage(context, 'Sign Up was Unsuccessful !', isSuccess: false);
       }
     } catch (e) {
@@ -101,16 +102,18 @@ class AuthProvider extends ChangeNotifier {
       var parsedJson = json.decode(response.body);
 
       if (response.statusCode == 200) {
+        int userId = parsedJson['user_id'];
+        prefs.setInt('user_id', userId);
+        saveToken(parsedJson['token']);
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => Home()), (route) => false);
         _showMessage(context, 'Login Successful !', isSuccess: true);
       } else {
+        Navigator.of(context, rootNavigator: true).pop();
         _showMessage(context, 'Login Failed !', isSuccess: false);
       }
     } catch (e) {
     } finally {
-      // Hide loading indicator when operation completes
-      // Navigator.of(context, rootNavigator: true).pop();
       notifyListeners();
     }
   }
@@ -149,6 +152,11 @@ class AuthProvider extends ChangeNotifier {
         _showMessage(context, 'Profile was Create Successfully !',
             isSuccess: true);
       } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+          (route) => false,
+        );
         _showMessage(context, 'Profile Creation Failed !', isSuccess: false);
       }
     } catch (e) {
@@ -163,7 +171,6 @@ class AuthProvider extends ChangeNotifier {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int? userId = prefs.getInt('user_id');
-
       if (userId == null) {
         // Handle the case where the user ID is not available
         return;
@@ -224,12 +231,13 @@ class AuthProvider extends ChangeNotifier {
       print('loginprofile response  ${response.body}');
       if (response.statusCode == 200) {
         var parsedJson = json.decode(response.body);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => CharacterAnimation()),
-            (route) => false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CharacterAnimation()),
+        );
         _showMessage(context, 'Success!', isSuccess: true);
       } else {
+        Navigator.of(context, rootNavigator: true).pop();
         _showMessage(context, 'Wrong Password !', isSuccess: false);
       }
     } catch (e) {

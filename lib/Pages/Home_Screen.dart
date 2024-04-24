@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Theme/palette.dart';
 
@@ -34,7 +35,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(390, 844));
     return Scaffold(
-      backgroundColor: Colors.transparent, // Set background color to transparent
+      backgroundColor:
+          Colors.transparent, // Set background color to transparent
       body: Stack(
         children: [
           // Background image
@@ -51,30 +53,34 @@ class _HomeState extends State<Home> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      height: 120.h,
-                      width: 390.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
+                    AnimatedOpacity(
+                      duration: Duration(milliseconds: 100),
+                      opacity: _listVisible ? 1.0 : 0.0,
+                      child: Container(
+                        height: 120.h,
+                        width: 390.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Palette.baseElementDark,
+                              Palette.baseElementLight,
+                            ],
+                          ),
                         ),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Palette.baseElementDark,
-                            Palette.baseElementLight,
-                          ],
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Home',
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        child: Center(
+                          child: Text(
+                            'Home',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -84,7 +90,7 @@ class _HomeState extends State<Home> {
                       child: Column(
                         children: [
                           AnimatedOpacity(
-                            duration: Duration(milliseconds: 500),
+                            duration: Duration(milliseconds: 1000),
                             opacity: _listVisible ? 1.0 : 0.0,
                             child: Consumer<AuthProvider>(
                               builder: (context, profileList, child) {
@@ -99,7 +105,10 @@ class _HomeState extends State<Home> {
                                     profileList.profilesList.length,
                                     (index) {
                                       return GestureDetector(
-                                        onTap: () {
+                                        onTap: () async {
+                                          final selectedProfileName = profileList.profilesList[index].profileName;
+                                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                                          prefs.setString('profile_name', selectedProfileName);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -123,8 +132,7 @@ class _HomeState extends State<Home> {
                                               ),
                                             ],
                                           ),
-                                          padding:
-                                              const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -147,49 +155,60 @@ class _HomeState extends State<Home> {
                               },
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateProfile(),
+                          AnimatedOpacity(
+                            duration: Duration(milliseconds: 1400),
+                            opacity: _listVisible ? 1.0 : 0.0,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateProfile(),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xffF7614B), Color(0xffF79448)],
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xffF7614B),
+                                      Color(0xffF79448)
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Container(
-                                width: 347.88.w,
-                                height: 54.h,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Create Profile',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: Colors.white,
+                                child: Container(
+                                  width: 347.88.w,
+                                  height: 54.h,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Create Profile',
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Provider.of<AuthProvider>(context,
-                                      listen: false)
-                                  .logout(context);
-                            },
-                            child: Text('logout'),
+                          AnimatedOpacity(
+                            duration: Duration(milliseconds: 1750),
+                            opacity: _listVisible ? 1.0 : 0.0,
+                            child: TextButton(
+                              onPressed: () {
+                                Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .logout(context);
+                              },
+                              child: Text('logout'),
+                            ),
                           )
                         ],
                       ),
