@@ -28,12 +28,17 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
   String text = '';
   final _confetti = ConfettiController(duration: const Duration(seconds: 5));
   bool isTwoWordMode = false; // Track the mode
+  // List to hold asset paths for images
+  List<String> imageAssets = [];
+
 
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
     flutterTts = FlutterTts();
+    
+    
 
     rootBundle.load('assets/dash_flutter_muscot.riv').then(
       (data) async {
