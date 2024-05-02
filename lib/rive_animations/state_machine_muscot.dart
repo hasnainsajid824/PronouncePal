@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -30,16 +30,22 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
   bool isTwoWordMode = false; // Track the mode
   // List to hold asset paths for images
   List<String> imageAssets = [];
-
+  late String currentImageAsset;
 
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
     flutterTts = FlutterTts();
-    
-    
 
+    // Load image assets
+    for (int i = 1; i <= 18; i++) {
+      imageAssets.add('assets/practice/$i.png');
+    }
+    setState(() {
+      // Change the displayed image
+      currentImageAsset = getRandomImageAsset();
+    });
     rootBundle.load('assets/dash_flutter_muscot.riv').then(
       (data) async {
         try {
@@ -80,11 +86,13 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
           // headers: {
           //   'Content-Type': 'application/json',
           // },
-          body: {'data': sent_word,});
-          // body: sent_word);
+          body: {
+            'data': sent_word,
+          });
+      // body: sent_word);
 
       if (response.statusCode == 200) {
-        // print('Response: ${response.body}'); 
+        // print('Response: ${response.body}');
         // return response.body;
 
         // Decode the JSON response
@@ -132,6 +140,9 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
               if (processedText.trim() == text.trim()) {
                 speak('شہباش');
                 playConfettiAnimation();
+                setState(() {
+                  currentImageAsset = getRandomImageAsset();
+                });
               } else {
                 setState(() {
                   text = processedText;
@@ -178,12 +189,91 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     }
   }
 
+  // Function to get a random image asset path
+  String getRandomImageAsset() {
+    final Random random = Random();
+    return imageAssets[random.nextInt(imageAssets.length)];
+  }
+
   @override
   void dispose() {
     _confetti.dispose();
     super.dispose();
     flutterTts.stop();
   }
+
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//         body: Container(
+//           decoration: BoxDecoration(
+//             image: DecorationImage(
+//               image: AssetImage('assets/back.png'),
+//               fit: BoxFit.cover,
+//             ),
+//           ),
+//           child: Stack(
+//             children: [
+//               riveArtboard == null
+//                   ? const SizedBox()
+//                   : Column(
+//                       children: [
+//                         Expanded(
+//                           child: Rive(
+//                             artboard: riveArtboard!,
+//                           ),
+//                         ),
+//                         ConfettiWidget(
+//                           confettiController: _confetti,
+//                           blastDirectionality: BlastDirectionality.explosive,
+//                           maxBlastForce: 30, // Adjust maximum blast force
+//                           minBlastForce: 10,
+//                           shouldLoop: false,
+//                           colors: const [
+//                             Colors.green,
+//                             Colors.blue,
+//                             Colors.pink,
+//                             Colors.orange,
+//                             Colors.purple
+//                           ],
+//                         ),
+//                         const SizedBox(height: 12),
+//                         FloatingActionButton(
+//                           onPressed: () {
+//                             if (_speech.isListening) {
+//                               stopListening();
+//                             } else {
+//                               startListening();
+//                               isLookUp?.value = true;
+//                             }
+//                           },
+//                           backgroundColor: Color.fromARGB(255, 87, 175, 247),
+//                           child: Icon(Icons.mic),
+//                         ),
+//                         const SizedBox(height: 22),
+//                       ],
+//                     ),
+//               Positioned(
+//                 top: 20,
+//                 right: 20,
+//                 child: Row(
+//                   children: [
+//                     Text(isTwoWordMode ? 'Multiple words' : 'Single word'),
+//                     Switch(
+//                       value: isTwoWordMode,
+//                       onChanged: (newValue) {
+//                         setState(() {
+//                           isTwoWordMode = newValue;
+//                         });
+//                       },
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       );
+// }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -196,6 +286,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
           ),
           child: Stack(
             children: [
+              // Rive animation
               riveArtboard == null
                   ? const SizedBox()
                   : Column(
@@ -204,11 +295,12 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                           child: Rive(
                             artboard: riveArtboard!,
                           ),
+                          
                         ),
                         ConfettiWidget(
                           confettiController: _confetti,
                           blastDirectionality: BlastDirectionality.explosive,
-                          maxBlastForce: 30, // Adjust maximum blast force
+                          maxBlastForce: 30,
                           minBlastForce: 10,
                           shouldLoop: false,
                           colors: const [
@@ -235,6 +327,41 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                         const SizedBox(height: 22),
                       ],
                     ),
+              Positioned(
+                top: 75, // Adjust this value as needed
+                left: 0,
+                right: 145,
+                child: SizedBox(
+                  width: double.infinity, // Make the Stack fill available width
+                  height: 200,
+                  child: Stack(
+                    children: [
+                      // Speech bubble icon at the bottom center
+                      Positioned(
+                        bottom: 5,
+                        left: 0,
+                        right: 30,
+                        child: Image.asset(
+                          'assets/speech.png', 
+                          height: 200,
+                          width: 200,
+                        ),
+                      ),
+                      // Image asset centered above the speech bubble
+                      Positioned(
+                        top: 0,
+                        left: 20,
+                        child: Image.asset(
+                          currentImageAsset, 
+                          width: 150, 
+                          height: 150,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               Positioned(
                 top: 20,
                 right: 20,

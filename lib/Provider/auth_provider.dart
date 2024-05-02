@@ -96,7 +96,6 @@ class AuthProvider extends ChangeNotifier {
         "email": email,
         "password": password,
       });
-
       print('signin status code ${response.statusCode}');
       print('signin response body ${response.body}');
       var parsedJson = json.decode(response.body);

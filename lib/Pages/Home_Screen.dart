@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:math';
 import '../Theme/palette.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _listVisible = false;
-
+    List<String> imageAssets = [];
   @override
   void initState() {
     super.initState();
@@ -29,8 +29,14 @@ class _HomeState extends State<Home> {
         _listVisible = true;
       });
     });
+    for (int i = 1; i <= 18; i++) {
+      imageAssets.add('assets/practice/$i.png');
+    }
   }
-
+  String getRandomImageAsset() {
+    final Random random = Random();
+    return imageAssets[random.nextInt(imageAssets.length)];
+  }
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(390, 844));
@@ -138,8 +144,10 @@ class _HomeState extends State<Home> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Expanded(
-                                                child: SvgPicture.asset(
-                                                  "assets/icons/profit.svg",
+                                                child: Image.asset(
+                                                  getRandomImageAsset(),
+                                                  width: 100, 
+                                                  height: 100,
                                                 ),
                                               ),
                                               Text(profileList
