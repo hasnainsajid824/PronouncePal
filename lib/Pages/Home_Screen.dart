@@ -35,7 +35,12 @@ class _HomeState extends State<Home> {
   }
   String getRandomImageAsset() {
     final Random random = Random();
-    return imageAssets[random.nextInt(imageAssets.length)];
+    String img = imageAssets[random.nextInt(imageAssets.length)];
+    if (img == 'assets/practice/32.png')
+    {
+      img = imageAssets[random.nextInt(imageAssets.length)];
+    }
+    return img;
   }
   @override
   Widget build(BuildContext context) {
