@@ -109,7 +109,8 @@ class AuthProvider extends ChangeNotifier {
         _showMessage(context, 'Login Successful !', isSuccess: true);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
-        _showMessage(context, 'Login Failed !', isSuccess: false);
+        _showMessage(context, 'Email or Password is not Valid',
+            isSuccess: false);
       }
     } catch (e) {
     } finally {
@@ -151,17 +152,61 @@ class AuthProvider extends ChangeNotifier {
         _showMessage(context, 'Profile was Create Successfully !',
             isSuccess: true);
       } else {
+        var parsedJson = json.decode(response.body);
+        String message = parsedJson['detail'];
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Home()),
           (route) => false,
         );
-        _showMessage(context, 'Profile Creation Failed !', isSuccess: false);
+        if (message != '') {
+          _showMessage(context, message, isSuccess: false);
+        } else {
+          _showMessage(context, 'Profile Creation Failed !', isSuccess: false);
+        }
       }
     } catch (e) {
       print('Error creating profile: $e');
     } finally {
       // Hide loading indicator when operation completes
+      notifyListeners();
+    }
+  }
+
+  deleteProfile(BuildContext context) async {
+    try {
+      loading(context);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('access_token');
+      int? userId = prefs.getInt('user_id');
+      if (accessToken == null || userId == null) {
+        // Handle the case where access token or user ID is not available
+        return;
+      }
+      var response = await http.delete(
+        Uri.parse('${Api.baseUrl}delete_profile/$userId/'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      print('Delete profile status code ${response.statusCode}');
+      print('Delete profile response ${response.body}');
+      if (response.statusCode == 204) {
+        // Deletion successful, navigate back to home screen
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+          (route) => false,
+        );
+        _showMessage(context, 'Profile deleted successfully!', isSuccess: true);
+      } else {
+        // Deletion failed, show error message
+        _showMessage(context, 'Failed to delete profile!', isSuccess: false);
+      }
+    } catch (error, st) {
+      // Handle any errors if necessary
+      print('Error deleting profile: $error $st');
+    } finally {
       notifyListeners();
     }
   }

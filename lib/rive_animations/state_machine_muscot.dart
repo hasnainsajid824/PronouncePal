@@ -39,7 +39,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     flutterTts = FlutterTts();
 
     // Load image assets
-    for (int i = 1; i <= 18; i++) {
+    for (int i = 1; i <= 41; i++) {
       imageAssets.add('assets/practice/$i.png');
     }
     setState(() {
@@ -137,6 +137,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
               speak(text);
             } else {
               String processedText = await processText(text);
+              
               if (processedText.trim() == text.trim()) {
                 speak('شہباش');
                 playConfettiAnimation();
@@ -222,7 +223,6 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                           child: Rive(
                             artboard: riveArtboard!,
                           ),
-                          
                         ),
                         ConfettiWidget(
                           confettiController: _confetti,
@@ -269,18 +269,18 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                         left: 0,
                         right: 30,
                         child: Image.asset(
-                          'assets/speech.png', 
+                          'assets/speech.png',
                           height: 200,
                           width: 200,
                         ),
                       ),
                       // Image asset centered above the speech bubble
                       Positioned(
-                        top: 0,
-                        left: 20,
+                        top: 10,
+                        left: 15,
                         child: Image.asset(
-                          currentImageAsset, 
-                          width: 150, 
+                          currentImageAsset,
+                          width: 150,
                           height: 150,
                         ),
                       ),

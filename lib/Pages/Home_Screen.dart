@@ -3,7 +3,6 @@ import 'package:final_year_prpject/Pages/profilepassword_screen.dart';
 import 'package:final_year_prpject/Provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
@@ -29,7 +28,7 @@ class _HomeState extends State<Home> {
         _listVisible = true;
       });
     });
-    for (int i = 1; i <= 18; i++) {
+    for (int i = 1; i <= 30; i++) {
       imageAssets.add('assets/practice/$i.png');
     }
   }
