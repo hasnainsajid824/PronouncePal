@@ -50,13 +50,41 @@ class _ProfilePasswordState extends State<ProfilePassword> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    Container(
+            height: 120.h,
+            width: 390.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Palette.baseElementDark,
+                  Palette.baseElementLight,
+                ],
+              ),
+            ),
+            child: Center(
+              child: Text(
+                'Login to your profile',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
                     AnimatedOpacity(
                       duration: Duration(milliseconds: 1750),
                       opacity: _opacity,
                       child: Transform.translate(
                         offset: Offset(0, _translationY),
                         child: Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 150.h),
                           child: Column(
                             children: [
                               SizedBox(
@@ -94,10 +122,8 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<AuthProvider>(context,
-                                          listen: false)
-                                      .loginProfile(
-                                          passwordController.text, context);
+                                  context.read<AuthProvider>().loginProfile(
+                                      passwordController.text, context);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.zero,
@@ -132,9 +158,7 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Provider.of<AuthProvider>(context,
-                                          listen: false)
-                                      .deleteProfile(context);
+                                  context.read<AuthProvider>().deleteProfile(context);
                                 },
                                 child: const Text('Delete Profile'),
                               ),

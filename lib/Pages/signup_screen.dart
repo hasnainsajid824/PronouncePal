@@ -106,7 +106,7 @@ class _SignUpState extends State<SignUp> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'enter name';
+                                      return 'Please Enter First Name';
                                     }
                                     return null;
                                   },
@@ -125,7 +125,7 @@ class _SignUpState extends State<SignUp> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'enter name';
+                                      return 'Please Enter Last Name';
                                     }
                                     return null;
                                   },
@@ -159,10 +159,10 @@ class _SignUpState extends State<SignUp> {
                                   obscureText: true,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'enter password';
+                                      return 'Enter password';
                                     }
                                     if (value.length < 8) {
-                                      return 'password should be 8 digits';
+                                      return 'Password should be 8 digits';
                                     }
                                     return null;
                                   },

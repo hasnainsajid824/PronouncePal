@@ -35,13 +35,34 @@ class _CreateProfileState extends State<CreateProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                height: 430.h,
-                width: 390.w,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.only(topLeft:Radius.circular(20),topRight: Radius.circular(20)),
-
-                ),
+                        height: 120.h,
+                        width: 390.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Palette.baseElementDark,
+                              Palette.baseElementLight,
+                            ],
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Create a Profile',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                 child: Column(
                   children: [
                     SizedBox(height:10.h),
@@ -66,7 +87,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'enter name';
+                                  return 'Enter Name';
                                 }
                                 return null;
                               },
@@ -88,7 +109,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'enter age';
+                                  return 'Enter Age';
                                 }
                                 return null;
                               },
@@ -109,10 +130,10 @@ class _CreateProfileState extends State<CreateProfile> {
                               obscureText: true,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'enter password';
+                                  return 'Enter password';
                                 }
                                 if (value.length < 8) {
-                                  return 'password should be 8 digits';
+                                  return 'Password should be 8 digits';
                                 }
                                 return null;
                               },

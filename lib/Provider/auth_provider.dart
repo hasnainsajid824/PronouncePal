@@ -174,43 +174,42 @@ class AuthProvider extends ChangeNotifier {
   }
 
   deleteProfile(BuildContext context) async {
-  try {
-    loading(context);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? profileName = prefs.getString('profile_name');
-    String? accessToken = prefs.getString('access_token');
-    if (accessToken == null) {
-      // Handle the case where access token is not available
-      return;
-    }
-    var response = await http.delete(
-      Uri.parse('${Api.baseUrl}delete_profile/$profileName/'), // Update the endpoint URL
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-    print('Delete profile status code ${response.statusCode}');
-    print('Delete profile response ${response.body}');
-    if (response.statusCode == 204) {
-      // Deletion successful, navigate back to home screen
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-        (route) => false,
+    try {
+      loading(context);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('access_token');
+      int? userId = prefs.getInt('user_id');
+      if (accessToken == null || userId == null) {
+        // Handle the case where access token or user ID is not available
+        return;
+      }
+      var response = await http.delete(
+        Uri.parse('${Api.baseUrl}delete_profile/$userId/'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
       );
-      _showMessage(context, 'Profile deleted successfully!', isSuccess: true);
-    } else {
-      // Deletion failed, show error message
-      _showMessage(context, 'Failed to delete profile!', isSuccess: false);
+      print('Delete profile status code ${response.statusCode}');
+      print('Delete profile response ${response.body}');
+      if (response.statusCode == 204) {
+        // Deletion successful, navigate back to home screen
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+          (route) => false,
+        );
+        _showMessage(context, 'Profile deleted successfully!', isSuccess: true);
+      } else {
+        // Deletion failed, show error message
+        _showMessage(context, 'Failed to delete profile!', isSuccess: false);
+      }
+    } catch (error, st) {
+      // Handle any errors if necessary
+      print('Error deleting profile: $error $st');
+    } finally {
+      notifyListeners();
     }
-  } catch (error, st) {
-    // Handle any errors if necessary
-    print('Error deleting profile: $error $st');
-  } finally {
-    notifyListeners();
   }
-}
-
 
   getUserProfile() async {
     try {

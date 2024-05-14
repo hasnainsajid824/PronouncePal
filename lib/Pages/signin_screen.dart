@@ -108,7 +108,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                     ).createShader(bounds);
                                   },
                                   child: Text(
-                                    "welcome back!",
+                                    "Welcome Back!",
                                     style: TextStyle(
                                       fontSize: 20.58.sp,
                                       fontWeight: FontWeight.w700,
@@ -167,10 +167,10 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'enter password';
+                                              return 'Enter password';
                                             }
                                             if (value.length < 8) {
-                                              return 'password should be 8 digit';
+                                              return 'Password should be 8 digit';
                                             }
                                             return null;
                                           },
