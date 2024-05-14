@@ -254,6 +254,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                         const SizedBox(height: 22),
                       ],
                     ),
+              if (!isTwoWordMode)
               Positioned(
                 top: 75, // Adjust this value as needed
                 left: 0,
