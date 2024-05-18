@@ -2,7 +2,7 @@ import 'package:final_year_prpject/Provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import '../Theme/palette.dart';
 class CreateProfile extends StatefulWidget {
   const CreateProfile({Key? key}) : super(key: key);
 
@@ -32,40 +32,48 @@ class _CreateProfileState extends State<CreateProfile> {
             image:DecorationImage(image: AssetImage("assets/images/bg kaaliye app.png",),fit: BoxFit.cover),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                        height: 120.h,
-                        width: 390.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
+              SafeArea(
+                child: Container(
+                          height: 120.h,
+                          width: 390.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Palette.baseElementDark,
+                                Palette.baseElementLight,
+                              ],
+                            ),
                           ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Palette.baseElementDark,
-                              Palette.baseElementLight,
-                            ],
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Create a Profile',
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          child: Center(
+                            child: Text(
+                              'Create a Profile',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                child: Column(
+              ),
+                      SizedBox(
+                                height: 250.h,
+                                child: Image.asset(
+                                  'assets/images/kbooklogo1.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height:10.h),
+                    
 
                     Padding(
                       padding:  EdgeInsets.only(left: 20.w,right: 20.w,top: 20.h),
@@ -184,9 +192,6 @@ class _CreateProfileState extends State<CreateProfile> {
 
                   ],
                 ),
-              ),
-
-
             ],
           ),
 
