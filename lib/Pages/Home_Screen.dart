@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     // Adding delay to simulate loading animation
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _listVisible = true;
       });
