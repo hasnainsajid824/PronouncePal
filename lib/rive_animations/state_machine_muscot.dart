@@ -174,7 +174,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     toggleDance(true);
     await flutterTts.setLanguage('ur-PK');
     await flutterTts.setPitch(1.7);
-    await flutterTts.setSpeechRate(0.25);
+    await flutterTts.setSpeechRate(0.27);
     await flutterTts.setVolume(1.0);
     await flutterTts.awaitSpeakCompletion(true);
     flutterTts.setCompletionHandler(() {

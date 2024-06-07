@@ -292,6 +292,7 @@ class AuthProvider extends ChangeNotifier {
           context,
           MaterialPageRoute(builder: (context) => CharacterAnimation()),
         );
+        Navigator.of(context, rootNavigator: true).pop();
         _showMessage(context, 'Success!', isSuccess: true);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
