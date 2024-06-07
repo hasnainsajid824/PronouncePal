@@ -26,13 +26,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Home.routeName,
-    routes: {
-      Home.routeName: (context) => Home(),
-    },
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Splash(), // Splash screen
+        Home.routeName: (context) => Home(), // Home screen route
+      },
       debugShowCheckedModeBanner: false,
       title: 'PronouncePal',
-      home: Splash(),
+      // home: Splash(),
     );
   }
 }
