@@ -287,12 +287,14 @@ class AuthProvider extends ChangeNotifier {
       print('loginprofile response  ${response.body}');
       if (response.statusCode == 200) {
         var parsedJson = json.decode(response.body);
+
         Navigator.of(context, rootNavigator: true).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CharacterAnimation()),
-        );
-        Navigator.of(context, rootNavigator: true).pop();
+
+        Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => CharacterAnimation()),
+        (Route<dynamic> route) => route.settings.name == Home.routeName,
+      );
         _showMessage(context, 'Success!', isSuccess: true);
       } else {
         Navigator.of(context, rootNavigator: true).pop();

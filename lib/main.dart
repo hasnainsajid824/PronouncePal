@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:final_year_prpject/Pages/Home_Screen.dart';
 import 'package:final_year_prpject/Pages/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ void main() {
       ],
       child: const MyApp(),
     ),
+    
   );
 }
 
@@ -24,6 +26,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: Home.routeName,
+    routes: {
+      Home.routeName: (context) => Home(),
+    },
       debugShowCheckedModeBanner: false,
       title: 'PronouncePal',
       home: Splash(),

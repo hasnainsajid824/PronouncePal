@@ -10,7 +10,7 @@ import '../Theme/palette.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
-
+  static const String routeName = '/home';
   @override
   State<Home> createState() => _HomeState();
 }

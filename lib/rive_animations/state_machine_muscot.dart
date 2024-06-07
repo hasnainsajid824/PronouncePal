@@ -37,7 +37,6 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     super.initState();
     _speech = stt.SpeechToText();
     flutterTts = FlutterTts();
-
     // Load image assets
     for (int i = 1; i <= 41; i++) {
       imageAssets.add('assets/practice/$i.png');
