@@ -7,8 +7,8 @@
         </intent>
     </queries>
     <application
-        android:label="final_year_prpject"
-        android:name="${applicationName}"
+        android:label="PronouncePal"
+        android:name="PronouncePal"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
