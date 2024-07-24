@@ -25,14 +25,13 @@ class _ProfilePasswordState extends State<ProfilePassword> {
   void initState() {
     super.initState();
     // Adding delay to start the animation after the widget is built
-    Future.delayed(Duration(milliseconds: 500), ()  {
+    Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
         _opacity = 1.0;
         _translationY = 0.0;
       });
-
     });
-     _fetchProfileProgress();
+    _fetchProfileProgress();
   }
 
   Future<void> _fetchProfileProgress() async {
@@ -44,7 +43,7 @@ class _ProfilePasswordState extends State<ProfilePassword> {
       if (profileId != null) {
         var progressData = await authProvider.getProfileProgress(profileId);
         setState(() {
-          _progress = progressData['progress'].toDouble() / 100; 
+          _progress = progressData['progress'].toDouble() / 100;
         });
       }
     } catch (error) {
@@ -199,10 +198,7 @@ class _ProfilePasswordState extends State<ProfilePassword> {
 //   }
 // }
 
-
-
-
-@override
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(390, 844));
     return Scaffold(
@@ -256,33 +252,38 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                       child: Transform.translate(
                         offset: Offset(0, _translationY),
                         child: Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 20.h), // Adjust top padding if needed
+                          padding: EdgeInsets.only(
+                              left: 20,
+                              right: 20,
+                              top: 20.h), // Adjust top padding if needed
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: 120.h, // Adjust size as needed
-                                child: CircularPercentIndicator(
-                                  radius: 120.0,
-                                  lineWidth: 13.0,
-                                  animation: true,
-                                  percent: _progress,
-                                  center: Text(
-                                    "${(_progress * 100).toStringAsFixed(1)}%",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0,
-                                    ),
+                              CircularPercentIndicator(
+                                radius: 120.0,
+                                lineWidth: 13.0,
+                                animation: true,
+                                percent: _progress,
+                                center: Text(
+                                  "${(_progress * 100).toStringAsFixed(1)}%",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
                                   ),
-                                  footer: Text(
+                                ),
+                                footer: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top:
+                                          8.0), // Space between indicator and text
+                                  child: Text(
                                     "Overall Accuracy",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17.0,
                                     ),
                                   ),
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  progressColor: Palette.baseElementDark,
                                 ),
+                                circularStrokeCap: CircularStrokeCap.round,
+                                progressColor: Palette.baseElementDark,
                               ),
                               SizedBox(height: 20), // Adjust spacing if needed
                               TextFormField(
@@ -348,7 +349,9 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  context.read<AuthProvider>().deleteProfile(context);
+                                  context
+                                      .read<AuthProvider>()
+                                      .deleteProfile(context);
                                 },
                                 child: const Text('Delete Profile'),
                               ),
