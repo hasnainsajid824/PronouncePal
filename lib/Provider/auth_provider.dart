@@ -306,6 +306,24 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  getProfileProgress(int profileId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    // final profileId = prefs.getInt("profile_id");
+    final response = await http.get(
+      Uri.parse('${Api.baseUrl}/get_child_progress/$profileId'), 
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load progress');
+    }
+  }
 
   checkLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

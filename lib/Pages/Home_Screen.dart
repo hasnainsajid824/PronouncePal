@@ -119,6 +119,8 @@ class _HomeState extends State<Home> {
                                           final selectedProfileName = profileList.profilesList[index].profileName;
                                           SharedPreferences prefs = await SharedPreferences.getInstance();
                                           prefs.setString('profile_name', selectedProfileName);
+                                          final profileId = await Provider.of<AuthProvider>(context, listen: false).getProfileId(selectedProfileName);
+                                          prefs.setInt('profile_id', profileId!);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
