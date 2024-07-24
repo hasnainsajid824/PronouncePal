@@ -311,7 +311,7 @@ class AuthProvider extends ChangeNotifier {
     final String? token = prefs.getString('token');
     // final profileId = prefs.getInt("profile_id");
     final response = await http.get(
-      Uri.parse('${Api.baseUrl}/get_child_progress/$profileId'), 
+      Uri.parse('${Api.baseUrl}profile-progress/$profileId'), 
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
