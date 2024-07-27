@@ -20,6 +20,7 @@ class _ProfilePasswordState extends State<ProfilePassword> {
   double _translationY = 50.0;
   double _progress = 0.0;
   int _correctlyPronouncedWords = 0;
+  int total_words = 0;
   var profileName = "";
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _ProfilePasswordState extends State<ProfilePassword> {
           _progress = progressData['progress'].toDouble() / 100;
           _correctlyPronouncedWords =
               progressData['correctly_pronounced_words'];
+          total_words = progressData['total_words_attempted'];
         });
       }
     } catch (error) {
@@ -119,11 +121,11 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                 animation: true,
                                 animationDuration: 1000,
                                 lineHeight: 40.0,
-                                trailing: const Text(
-                                  "Total Attempts",
+                                trailing: Text(
+                                  "$total_words\nTotal Attempts",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 17.0,
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 percent: _progress,
