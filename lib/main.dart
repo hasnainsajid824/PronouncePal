@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => Splash(), // Splash screen
-        Home.routeName: (context) => Home(), // Home screen route
+        '/': (context) => Splash(),
+        Home.routeName: (context) => Home(), 
       },
       debugShowCheckedModeBanner: false,
       title: 'PronouncePal',

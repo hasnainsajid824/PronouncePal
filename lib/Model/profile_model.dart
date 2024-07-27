@@ -1,7 +1,7 @@
 class UserProfileModel {
   String profileName;
   String age;
-  int progress;
+  double progress;
   int correctly_pronounced_words;
   int total_words_attempted;
 

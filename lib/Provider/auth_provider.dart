@@ -1,7 +1,7 @@
-
 import 'dart:convert';
 import 'package:final_year_prpject/Model/profile_model.dart';
 import 'package:final_year_prpject/Pages/Home_Screen.dart';
+import 'package:final_year_prpject/Pages/ResetPasswordPage.dart';
 import 'package:final_year_prpject/rive_animations/character_animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -273,6 +273,7 @@ class AuthProvider extends ChangeNotifier {
       loading(context);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? profileName = prefs.getString('profile_name');
+      int? profileId = prefs.getInt('profile_id');
       var response = await http.post(
         Uri.parse('${Api.baseUrl}login/profile'),
         headers: {
@@ -281,6 +282,7 @@ class AuthProvider extends ChangeNotifier {
         body: jsonEncode({
           "password": password,
           "profile_name": profileName,
+          "profile_id": profileId.toString(),
         }),
       );
       print('signin status code ${response.statusCode}');
@@ -308,12 +310,11 @@ class AuthProvider extends ChangeNotifier {
   }
   getProfileProgress(int profileId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
+    // final String? token = prefs.getString('token');
     // final profileId = prefs.getInt("profile_id");
     final response = await http.get(
       Uri.parse('${Api.baseUrl}profile-progress/$profileId'), 
       headers: {
-        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
@@ -331,5 +332,61 @@ class AuthProvider extends ChangeNotifier {
     return accessToken == null;
   }
 
+  // Function to send OTP for password reset
+  sendResetPasswordOTP(String email, BuildContext context) async {
+    final url = Uri.parse('${Api.baseUrl}send-reset-otp/');
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({'email': email}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        // OTP sent successfully
+        print('OTP sent to email');
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => ResetPasswordPage()),
+            (route) => false);
+         _showMessage(context, 'OTP sent to email', isSuccess: true);
+      } else {
+        // Handle error
+        print('Failed to send OTP');
+         _showMessage(context, 'Failed to send OTP', isSuccess: false);
+      }
+    } catch (error) {
+      // Handle error
+      print('Error: $error');
+    }
+  }
+
+  // Function to reset password
+  resetPassword(String otp, String newPassword, String confirmPassword,BuildContext context) async {
+    final url = Uri.parse('${Api.baseUrl}reset-password/');
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({'otp': otp, 'new_password': newPassword, 'confirm_password': confirmPassword}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        // Password reset successfully
+         _showMessage(context, 'Password reset successfully', isSuccess: true);
+        print('Password reset successfully');
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SignIn()),
+            (route) => false);
+      } else {
+        // Handle error
+        print('Failed to reset password');
+         _showMessage(context, 'Failed to reset password', isSuccess: false);
+
+      }
+    } catch (error) {
+      // Handle error
+      print('Error: $error');
+    }
+  }
   List<UserProfileModel> get profilesList => _profilesList;
 }

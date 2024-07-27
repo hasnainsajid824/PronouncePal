@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
                     "assets/images/bg kaaliye app.png",
@@ -48,7 +48,7 @@ class _SignUpState extends State<SignUp> {
                   width: 390.w,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)),
                     boxShadow: [
@@ -56,7 +56,7 @@ class _SignUpState extends State<SignUp> {
                         color: Colors.grey.withOpacity(0.3),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -67,7 +67,7 @@ class _SignUpState extends State<SignUp> {
                           padding: EdgeInsets.only(top: 10.h),
                           child: ShaderMask(
                             shaderCallback: (Rect bounds) {
-                              return LinearGradient(
+                              return const LinearGradient(
                                 colors: [Color(0xffF7614B), Color(0xffF79448)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -230,8 +230,8 @@ class _SignUpState extends State<SignUp> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => SignIn())), transition: Transition.leftToRight, 
-                                          duration: Duration(seconds: 3));
+                                          builder: (context) => const SignIn())), transition: Transition.leftToRight, 
+                                          duration: const Duration(seconds: 3));
                                 },
                                 child: Text(
                                   'Sign in',

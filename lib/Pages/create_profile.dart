@@ -28,7 +28,7 @@ class _CreateProfileState extends State<CreateProfile> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image:DecorationImage(image: AssetImage("assets/images/bg kaaliye app.png",),fit: BoxFit.cover),
           ),
           child: Column(
@@ -37,7 +37,7 @@ class _CreateProfileState extends State<CreateProfile> {
                 child: Container(
                           height: 120.h,
                           width: 390.w,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15),
                               bottomRight: Radius.circular(15),

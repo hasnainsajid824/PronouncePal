@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     super.initState();
     Provider.of<AuthProvider>(context, listen: false).getUserProfile();
     // Adding delay to simulate loading animation
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _listVisible = true;
       });
@@ -64,12 +64,12 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     AnimatedOpacity(
-                      duration: Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 100),
                       opacity: _listVisible ? 1.0 : 0.0,
                       child: Container(
                         height: 120.h,
                         width: 390.w,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(15),
                             bottomRight: Radius.circular(15),
@@ -96,11 +96,11 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Column(
                         children: [
                           AnimatedOpacity(
-                            duration: Duration(milliseconds: 1000),
+                            duration: const Duration(milliseconds: 1000),
                             opacity: _listVisible ? 1.0 : 0.0,
                             child: Consumer<AuthProvider>(
                               builder: (context, profileList, child) {
@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  ProfilePassword(),
+                                                  const ProfilePassword(),
                                             ),
                                           );
                                         },
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
                                                     .withOpacity(0.3),
                                                 spreadRadius: 2,
                                                 blurRadius: 5,
-                                                offset: Offset(0, 3),
+                                                offset: const Offset(0, 3),
                                               ),
                                             ],
                                           ),
@@ -170,14 +170,14 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           AnimatedOpacity(
-                            duration: Duration(milliseconds: 1400),
+                            duration: const Duration(milliseconds: 1400),
                             opacity: _listVisible ? 1.0 : 0.0,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CreateProfile(),
+                                    builder: (context) => const CreateProfile(),
                                   ),
                                 );
                               },
@@ -213,7 +213,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           AnimatedOpacity(
-                            duration: Duration(milliseconds: 1750),
+                            duration: const Duration(milliseconds: 1750),
                             opacity: _listVisible ? 1.0 : 0.0,
                             child: TextButton(
                               onPressed: () {
@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
                                         listen: false)
                                     .logout(context);
                               },
-                              child: Text('logout'),
+                              child: const Text('logout'),
                             ),
                           )
                         ],
