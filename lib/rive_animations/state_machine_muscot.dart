@@ -231,7 +231,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        FloatingActionButton(
+                        FloatingActionButton.large(
                           onPressed: () {
                             if (_speech.isListening) {
                               stopListening();
@@ -241,6 +241,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                             }
                           },
                           backgroundColor: const Color.fromARGB(255, 87, 175, 247),
+                          foregroundColor: Color.fromARGB(255, 248, 248, 248),
                           child: const Icon(Icons.mic),
                         ),
                         const SizedBox(height: 22),
