@@ -117,22 +117,26 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                           child: Column(
                             children: [
                               LinearPercentIndicator(
-                                width: 180,
+                                width: 200,
                                 animation: true,
                                 animationDuration: 1000,
                                 lineHeight: 40.0,
                                 trailing: Text(
                                   "$total_words\nTotal Attempts",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12.0,
+                                    fontSize: 14.0,
                                   ),
                                 ),
                                 percent: _progress,
                                 center: Text(
-                                    '$_correctlyPronouncedWords correct attempts'),
+                                    '$_correctlyPronouncedWords correct attempts',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),),
                                 linearStrokeCap: LinearStrokeCap.butt,
-                                progressColor: Palette.baseElementLight,
+                                // progressColor: Palette.baseElementLight,
+                                linearGradient: LinearGradient(colors: const [Palette.baseElementLight, Palette.baseElementDark]),
                               ),
                               const SizedBox(height: 30),
                               CircularPercentIndicator(
@@ -161,7 +165,9 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                   ),
                                 ),
                                 circularStrokeCap: CircularStrokeCap.round,
-                                progressColor: Palette.baseElementLight,
+                                // progressColor: Palette.baseElementLight,
+                                linearGradient: LinearGradient(colors: const [ Palette.baseElementDark,Palette.baseElementLight,
+                                                               Palette.baseElementDark,]),
                               ),
                               const SizedBox(
                                   height: 20), // Adjust spacing if needed

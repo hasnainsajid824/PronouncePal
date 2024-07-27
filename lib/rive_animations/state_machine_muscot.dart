@@ -36,7 +36,14 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
   late String currentImageAsset;
   double accuracy = 0.0;
   Timer? lookUpAnimationTimer;
-
+  int wrongCount = 0;
+  final List<String> responses = [
+    'ایسے نہ کریں',
+    'یہاں نہ دبائیں',
+    'مجھے پریشان نہ کریں',
+    'مجھے نہ چھیڑیں',
+    'پریشان نہ کریں',
+  ];
   @override
   void initState() {
     super.initState();
@@ -85,10 +92,8 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
 
     final url = Uri.parse('${Api.baseUrl}process_text/');
     try {
-      final response = await http.post(url, body: {
-        'data': sent_word,
-        'profile_id': profileId.toString()
-      });
+      final response = await http.post(url,
+          body: {'data': sent_word, 'profile_id': profileId.toString()});
 
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
@@ -108,7 +113,6 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
       return '';
     }
   }
-
 
   Future<void> startListening() async {
     bool available = await _speech.initialize(
@@ -130,6 +134,9 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
             print(text);
             if (text == '') {
               speak(text);
+              setState(() {
+                wrongCount += 1;
+              });
             } else {
               String processedText = await processText(text);
               if (processedText.trim() == text.trim() || accuracy == 1.0) {
@@ -137,12 +144,20 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                 playConfettiAnimation();
                 setState(() {
                   currentImageAsset = getRandomImageAsset();
+                  wrongCount = 0;
                 });
               } else {
                 setState(() {
                   text = processedText;
+                  wrongCount += 1;
                 });
                 speak(text);
+                if (wrongCount >= 3) {
+                  setState(() {
+                    currentImageAsset = getRandomImageAsset();
+                    wrongCount = 0;
+                  });
+                }
               }
             }
           }
@@ -187,7 +202,10 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
     final Random random = Random();
     return imageAssets[random.nextInt(imageAssets.length)];
   }
-
+  String getRandomResponse() {
+    final Random random = Random();
+    return responses[random.nextInt(responses.length)];
+  }
   @override
   void dispose() {
     _confetti.dispose();
@@ -209,51 +227,59 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
               // Rive animation
               riveArtboard == null
                   ? const SizedBox()
-                  : Column(
-                      children: [
-                        Expanded(
-                          child: Rive(
-                            artboard: riveArtboard!,
+                  : GestureDetector(
+                      onTap: () {
+                        speak(getRandomResponse());
+                      },
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 150),
+                          Expanded(
+                            child: Rive(
+                              artboard: riveArtboard!,
+                            ),
                           ),
-                        ),
-                        ConfettiWidget(
-                          confettiController: _confetti,
-                          blastDirectionality: BlastDirectionality.explosive,
-                          maxBlastForce: 30,
-                          minBlastForce: 10,
-                          shouldLoop: false,
-                          colors: const [
-                            Colors.green,
-                            Colors.blue,
-                            Colors.pink,
-                            Colors.orange,
-                            Colors.purple
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        FloatingActionButton.large(
-                          onPressed: () {
-                            if (_speech.isListening) {
-                              stopListening();
-                            } else {
-                              startListening();
-                              isLookUp?.value = true;
-                            }
-                          },
-                          backgroundColor: const Color.fromARGB(255, 87, 175, 247),
-                          foregroundColor: Color.fromARGB(255, 248, 248, 248),
-                          child: const Icon(Icons.mic),
-                        ),
-                        const SizedBox(height: 22),
-                      ],
+                          ConfettiWidget(
+                            confettiController: _confetti,
+                            blastDirectionality: BlastDirectionality.explosive,
+                            maxBlastForce: 30,
+                            minBlastForce: 10,
+                            shouldLoop: false,
+                            colors: const [
+                              Colors.green,
+                              Colors.blue,
+                              Colors.pink,
+                              Colors.orange,
+                              Colors.purple
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          FloatingActionButton.large(
+                            onPressed: () {
+                              if (_speech.isListening) {
+                                stopListening();
+                              } else {
+                                startListening();
+                                isLookUp?.value = true;
+                              }
+                            },
+                            autofocus: true,
+                            backgroundColor:
+                                const Color.fromARGB(255, 87, 175, 247),
+                            foregroundColor: Color.fromARGB(255, 248, 248, 248),
+                            child: const Icon(Icons.mic),
+                          ),
+                          const SizedBox(height: 22),
+                        ],
+                      ),
                     ),
               // CircularPercentIndicator in the top-left corner
               Positioned(
                 top: 16.0, // Adjust the top position as needed
                 left: 16.0, // Adjust the left position as needed
                 child: CircularPercentIndicator(
-                  radius: 40.0, 
-                  lineWidth: 8.0, 
+                  radius: 40.0,
+                  lineWidth: 8.0,
                   animation: true,
                   animationDuration: 1500,
                   percent: accuracy,
@@ -262,14 +288,14 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                     style: const TextStyle(
                       color: Palette.baseElementDark,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16.0, 
+                      fontSize: 16.0,
                     ),
                   ),
                   footer: const Text(
                     "Accuracy",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10.0, // Smaller text
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14.0,
                     ),
                   ),
                   circularStrokeCap: CircularStrokeCap.round,
@@ -283,10 +309,10 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
               //     crossAxisAlignment: CrossAxisAlignment.start,
               //     children: [
               //       RotatedBox(
-              //         quarterTurns: 4, 
+              //         quarterTurns: 4,
               //         child: LinearPercentIndicator(
-              //           width: 60, 
-              //           lineHeight: 200.0, 
+              //           width: 60,
+              //           lineHeight: 200.0,
               //           animation: true,
               //           animationDuration: 500,
               //           percent: accuracy,
@@ -316,7 +342,7 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
               // ),
               if (!isTwoWordMode)
                 Positioned(
-                  top: 75, // Adjust this value as needed
+                  top: 145, // Adjust this value as needed
                   left: 0,
                   right: 145,
                   child: SizedBox(
@@ -350,12 +376,19 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
                 ),
 
               Positioned(
-                top: 20,
-                right: 20,
+                top: 8,
+                right: 13,
                 child: Row(
                   children: [
-                    Text(isTwoWordMode ? 'Multiple words' : 'Single word'),
+                    Text(
+                      isTwoWordMode ? 'Multiple\nWords' : 'Single\nWord',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     Switch(
+                      activeColor: Palette.baseElementLight,
+                      inactiveThumbColor: Palette.baseElementDark,
                       value: isTwoWordMode,
                       onChanged: (value) {
                         setState(() {

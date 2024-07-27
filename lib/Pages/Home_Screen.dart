@@ -99,6 +99,7 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Column(
                         children: [
+                          SizedBox(height:70.h),
                           AnimatedOpacity(
                             duration: const Duration(milliseconds: 1000),
                             opacity: _listVisible ? 1.0 : 0.0,
@@ -108,8 +109,8 @@ class _HomeState extends State<Home> {
                                   primary: false,
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(20),
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 30,
                                   crossAxisCount: 2,
                                   children: List.generate(
                                     profileList.profilesList.length,
