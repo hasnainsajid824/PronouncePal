@@ -1,3 +1,4 @@
+import 'package:final_year_prpject/Pages/WordsGridModal.dart';
 import 'package:final_year_prpject/Provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Theme/palette.dart';
+import 'edit_profile.dart';
 
 class ProfilePassword extends StatefulWidget {
   const ProfilePassword({Key? key}) : super(key: key);
@@ -22,10 +24,14 @@ class _ProfilePasswordState extends State<ProfilePassword> {
   int _correctlyPronouncedWords = 0;
   int total_words = 0;
   var profileName = "";
+  var profileId;
+  var password;
+  var age;
+  List<String> words_to_focus = [];
+
   @override
   void initState() {
     super.initState();
-    // Adding delay to start the animation after the widget is built
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _opacity = 1.0;
@@ -40,20 +46,32 @@ class _ProfilePasswordState extends State<ProfilePassword> {
 
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final profileId = prefs.getInt("profile_id");
+      profileId = prefs.getInt("profile_id");
       profileName = prefs.getString("profile_name")!;
       if (profileId != null) {
         var progressData = await authProvider.getProfileProgress(profileId);
         setState(() {
+          age = progressData['age'];
+          password = progressData['password'];
           _progress = progressData['progress'].toDouble() / 100;
           _correctlyPronouncedWords =
               progressData['correctly_pronounced_words'];
           total_words = progressData['total_words_attempted'];
+
+          words_to_focus = List<String>.from(progressData['words_to_focus']);
+          print(words_to_focus);
         });
       }
     } catch (error) {
       print('Error fetching progress: $error');
     }
+  }
+
+  void _showWordsGridModal() {
+    showDialog(
+      context: context,
+      builder: (context) => WordsGridModal(words: words_to_focus),
+    );
   }
 
   @override
@@ -130,13 +148,18 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                 ),
                                 percent: _progress,
                                 center: Text(
-                                    '$_correctlyPronouncedWords correct attempts',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),),
+                                  '$_correctlyPronouncedWords correct attempts',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                                 linearStrokeCap: LinearStrokeCap.butt,
-                                // progressColor: Palette.baseElementLight,
-                                linearGradient: LinearGradient(colors: const [Palette.baseElementLight, Palette.baseElementDark]),
+                                linearGradient: const LinearGradient(
+                                  colors: [
+                                    Palette.baseElementLight,
+                                    Palette.baseElementDark,
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 30),
                               CircularPercentIndicator(
@@ -165,13 +188,16 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                   ),
                                 ),
                                 circularStrokeCap: CircularStrokeCap.round,
-                                // progressColor: Palette.baseElementLight,
-                                linearGradient: LinearGradient(colors: const [ Palette.baseElementDark,Palette.baseElementLight,
-                                                               Palette.baseElementDark,]),
+                                linearGradient: const LinearGradient(
+                                  colors: [
+                                    Palette.baseElementDark,
+                                    Palette.baseElementLight,
+                                    Palette.baseElementDark,
+                                  ],
+                                ),
                               ),
                               const SizedBox(
                                   height: 20), // Adjust spacing if needed
-                              // Adjust spacing if needed
                               TextFormField(
                                 controller: passwordController,
                                 decoration: InputDecoration(
@@ -188,8 +214,8 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                   if (value == null || value.isEmpty) {
                                     return 'Enter password';
                                   }
-                                  if (value.length < 8) {
-                                    return 'Password should be 8 digits';
+                                  if (value.length < 4) {
+                                    return 'Password should be 4 digits';
                                   }
                                   return null;
                                 },
@@ -212,8 +238,8 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [
-                                        Color(0xffF7614B),
-                                        Color(0xffF79448)
+                                        Palette.baseElementDark,
+                                        Palette.baseElementLight,
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -231,15 +257,68 @@ class _ProfilePasswordState extends State<ProfilePassword> {
                                 ),
                               ),
                               const SizedBox(
-                                height: 30,
+                                height: 5,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  context
-                                      .read<AuthProvider>()
-                                      .deleteProfile(context);
-                                },
-                                child: const Text('Delete Profile'),
+                              ElevatedButton(
+                                onPressed: _showWordsGridModal,
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Palette.baseElementLight,
+                                        Palette.baseElementDark,
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Container(
+                                    width: 347.88.w,
+                                    height: 54.h,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Words To Focus',
+                                      style: TextStyle(
+                                          fontSize: 18.sp, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditProfile(
+                                            profileId: profileId,
+                                            currentName: profileName,
+                                            currentAge: age,
+                                            currentPassword: password,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Edit Profile'),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  TextButton(
+                                    onPressed: () {
+                                      context
+                                          .read<AuthProvider>()
+                                          .deleteProfile(context);
+                                    },
+                                    child: const Text('Delete Profile'),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

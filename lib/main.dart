@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Splash(),
-        Home.routeName: (context) => Home(), 
+        Home.routeName: (context) => const Home(), 
       },
       debugShowCheckedModeBanner: false,
       title: 'PronouncePal',

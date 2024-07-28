@@ -140,8 +140,8 @@ class _CreateProfileState extends State<CreateProfile> {
                                 if (value == null || value.isEmpty) {
                                   return 'Enter password';
                                 }
-                                if (value.length < 8) {
-                                  return 'Password should be 8 digits';
+                                if (value.length < 4) {
+                                  return 'Password should be 4 digits';
                                 }
                                 return null;
                               },

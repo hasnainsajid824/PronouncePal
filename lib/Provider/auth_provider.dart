@@ -36,10 +36,12 @@ class AuthProvider extends ChangeNotifier {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  signup(String firstName, lastName, email, password, BuildContext context) async {
+  signup(
+      String firstName, lastName, email, password, BuildContext context) async {
     try {
       loading(context);
-      var response = await http.post(Uri.parse('${Api.baseUrl}register/'), body: {
+      var response =
+          await http.post(Uri.parse('${Api.baseUrl}register/'), body: {
         "first_name": firstName,
         "last_name": lastName,
         "email": email,
@@ -155,35 +157,70 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  editProfile(int profileId, String name, String age, String password,
+      BuildContext context) async {
+    try {
+      loading(context);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('access_token');
+      final response = await http.put(
+        Uri.parse('${Api.baseUrl}profile/edit/$profileId/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode({
+          'profile_name': name,
+          'age': age,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => Home()), (route) => false);
+        _showMessage(context, 'Profile updated successfully!', isSuccess: true);
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        _showMessage(context, 'Failed to update Profile!', isSuccess: false);
+      }
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
+
+      _showMessage(context, 'An error occured!', isSuccess: false);
+    }
+  }
+
   Future<int?> getProfileId(String profileName) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  int? userId = prefs.getInt('user_id');
-  if (userId == null) {
-    print('User ID is null');
-    return null;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('user_id');
+    if (userId == null) {
+      print('User ID is null');
+      return null;
+    }
+
+    print(
+        'Requesting profile ID for user ID: $userId, profile name: $profileName');
+
+    var encodedProfileName = Uri.encodeComponent(profileName);
+    var response = await http.get(
+      Uri.parse('${Api.baseUrl}profile_id/$userId/$encodedProfileName/'),
+      headers: {
+        'Authorization': 'Bearer ${prefs.getString('access_token')}',
+      },
+    );
+
+    print('Response status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(response.body);
+      return parsedJson['profile_id'];
+    } else {
+      return null;
+    }
   }
-
-  print('Requesting profile ID for user ID: $userId, profile name: $profileName');
-
-  var encodedProfileName = Uri.encodeComponent(profileName);
-  var response = await http.get(
-    Uri.parse('${Api.baseUrl}profile_id/$userId/$encodedProfileName/'),
-    headers: {
-      'Authorization': 'Bearer ${prefs.getString('access_token')}',
-    },
-  );
-
-  print('Response status code: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  if (response.statusCode == 200) {
-    var parsedJson = json.decode(response.body);
-    return parsedJson['profile_id'];
-  } else {
-    return null;
-  }
-}
-
 
   deleteProfile(BuildContext context) async {
     try {
@@ -293,10 +330,10 @@ class AuthProvider extends ChangeNotifier {
         Navigator.of(context, rootNavigator: true).pop();
 
         Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => CharacterAnimation()),
-        (Route<dynamic> route) => route.settings.name == Home.routeName,
-      );
+          context,
+          MaterialPageRoute(builder: (context) => CharacterAnimation()),
+          (Route<dynamic> route) => route.settings.name == Home.routeName,
+        );
         _showMessage(context, 'Success!', isSuccess: true);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
@@ -308,19 +345,21 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   getProfileProgress(int profileId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // final String? token = prefs.getString('token');
     // final profileId = prefs.getInt("profile_id");
     final response = await http.get(
-      Uri.parse('${Api.baseUrl}profile-progress/$profileId'), 
+      Uri.parse('${Api.baseUrl}profile-progress/$profileId'),
       headers: {
         'Content-Type': 'application/json',
       },
     );
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      // return json.decode(response.body);
+      return json.decode(utf8.decode(response.bodyBytes));
     } else {
       throw Exception('Failed to load progress');
     }
@@ -348,11 +387,11 @@ class AuthProvider extends ChangeNotifier {
             context,
             MaterialPageRoute(builder: (context) => ResetPasswordPage()),
             (route) => false);
-         _showMessage(context, 'OTP sent to email', isSuccess: true);
+        _showMessage(context, 'OTP sent to email', isSuccess: true);
       } else {
         // Handle error
         print('Failed to send OTP');
-         _showMessage(context, 'Failed to send OTP', isSuccess: false);
+        _showMessage(context, 'Failed to send OTP', isSuccess: false);
       }
     } catch (error) {
       // Handle error
@@ -361,17 +400,22 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Function to reset password
-  resetPassword(String otp, String newPassword, String confirmPassword,BuildContext context) async {
+  resetPassword(String otp, String newPassword, String confirmPassword,
+      BuildContext context) async {
     final url = Uri.parse('${Api.baseUrl}reset-password/');
     try {
       final response = await http.post(
         url,
-        body: json.encode({'otp': otp, 'new_password': newPassword, 'confirm_password': confirmPassword}),
+        body: json.encode({
+          'otp': otp,
+          'new_password': newPassword,
+          'confirm_password': confirmPassword
+        }),
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
         // Password reset successfully
-         _showMessage(context, 'Password reset successfully', isSuccess: true);
+        _showMessage(context, 'Password reset successfully', isSuccess: true);
         print('Password reset successfully');
         Navigator.pushAndRemoveUntil(
             context,
@@ -380,13 +424,13 @@ class AuthProvider extends ChangeNotifier {
       } else {
         // Handle error
         print('Failed to reset password');
-         _showMessage(context, 'Failed to reset password', isSuccess: false);
-
+        _showMessage(context, 'Failed to reset password', isSuccess: false);
       }
     } catch (error) {
       // Handle error
       print('Error: $error');
     }
   }
+
   List<UserProfileModel> get profilesList => _profilesList;
 }
