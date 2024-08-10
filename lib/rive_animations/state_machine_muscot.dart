@@ -39,10 +39,10 @@ class _StateMachineMuscotState extends State<StateMachineMuscot> {
   int wrongCount = 0;
   final List<String> responses = [
     'ایسے نہ کریں',
-    'یہاں نہ دبائیں',
-    'مجھے پریشان نہ کریں',
-    'مجھے نہ چھیڑیں',
     'پریشان نہ کریں',
+    'نہ کریں',
+    'یہ پڑھیں',
+    'یہ کیا ھے'
   ];
   @override
   void initState() {
