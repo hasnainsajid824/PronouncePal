@@ -37,9 +37,9 @@ PronouncePal is an innovative **language learning and speech improvement app** d
 
 A preview of the app UI is available in the [`screenshots/`](./screenshots) folder.
 
-| Home Screen | Practice Mode | Feedback View |
-|-------------|----------------|----------------|
-| ![Home](screenshots/home.png) | ![Practice](screenshots/practice.png) 
+| Practice Screen | Feedback Animation |
+|-------------|----------------|
+| ![Home](screenshots/image.png) | ![Practice](screenshots/practice.png) 
 
 > 📝 **Note:** All app preview images are stored in the `screenshots/` folder located in the root of this project.
 
